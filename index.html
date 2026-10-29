@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedCore – Hospital Management System</title>
+  <meta name="description" content="A premium hospital management interface for managing patients, doctors, and appointments." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      </div>
+      <span class="logo-text">MedCore</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="#" class="nav-item active" id="nav-dashboard" onclick="showSection('dashboard')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span>Dashboard</span>
+      </a>
+      <a href="#" class="nav-item" id="nav-patients" onclick="showSection('patients')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Patients</span>
+        <span class="badge" id="patient-badge">0</span>
+      </a>
+      <a href="#" class="nav-item" id="nav-doctors" onclick="showSection('doctors')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><line x1="12" y1="11" x2="12" y2="16"/><line x1="9.5" y1="13.5" x2="14.5" y2="13.5"/></svg>
+        <span>Doctors</span>
+        <span class="badge" id="doctor-badge">0</span>
+      </a>
+      <a href="#" class="nav-item" id="nav-appointments" onclick="showSection('appointments')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span>Appointments</span>
+        <span class="badge" id="appt-badge">0</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="system-status">
+        <span class="status-dot"></span>
+        <span>System Online</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Header -->
+    <header class="top-header">
+      <div class="header-title" id="header-title">Dashboard</div>
+      <div class="header-right">
+        <div class="search-bar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="global-search" placeholder="Search patients, doctors..." oninput="handleSearch(this.value)" />
+        </div>
+        <div class="header-time" id="header-time"></div>
+      </div>
+    </header>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <!-- ====== DASHBOARD SECTION ====== -->
+    <section class="section active" id="section-dashboard">
+      <div class="stats-grid">
+        <div class="stat-card stat-blue" onclick="showSection('patients')">
+          <div class="stat-info">
+            <span class="stat-label">Total Patients</span>
+            <span class="stat-value" id="stat-patients">0</span>
+          </div>
+          <div class="stat-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          </div>
+        </div>
+        <div class="stat-card stat-teal" onclick="showSection('doctors')">
+          <div class="stat-info">
+            <span class="stat-label">Total Doctors</span>
+            <span class="stat-value" id="stat-doctors">0</span>
+          </div>
+          <div class="stat-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><line x1="12" y1="11" x2="12" y2="16"/><line x1="9.5" y1="13.5" x2="14.5" y2="13.5"/></svg>
+          </div>
+        </div>
+        <div class="stat-card stat-purple" onclick="showSection('appointments')">
+          <div class="stat-info">
+            <span class="stat-label">Total Appointments</span>
+            <span class="stat-value" id="stat-appointments">0</span>
+          </div>
+          <div class="stat-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Recent Appointments</h2>
+          </div>
+          <div id="recent-appointments-list">
+            <div class="empty-state">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <p>No appointments yet</p>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Quick Actions</h2>
+          </div>
+          <div class="quick-actions">
+            <button class="quick-btn blue" onclick="openModal('add-patient-modal')">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+              Add Patient
+            </button>
+            <button class="quick-btn teal" onclick="openModal('add-doctor-modal')">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+              Add Doctor
+            </button>
+            <button class="quick-btn purple" onclick="openModal('add-appt-modal')">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+              Book Appointment
+            </button>
+          </div>
+          <div class="card-header" style="margin-top:1.5rem">
+            <h2 class="card-title">Patient Search</h2>
+          </div>
+          <div class="search-patient-box">
+            <input type="number" id="search-patient-id" placeholder="Enter Patient ID..." class="form-input" min="1" />
+            <button class="btn btn-primary" onclick="searchPatientById()">Search</button>
+          </div>
+          <div id="search-result"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== PATIENTS SECTION ====== -->
+    <section class="section" id="section-patients">
+      <div class="section-header">
+        <h2 class="section-title">Patient Management</h2>
+        <button class="btn btn-primary" id="add-patient-btn" onclick="openModal('add-patient-modal')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Patient
+        </button>
+      </div>
+      <div class="card">
+        <div class="table-wrapper">
+          <table class="data-table" id="patients-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Condition</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="patients-tbody">
+              <tr><td colspan="5" class="empty-row">No patients registered yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== DOCTORS SECTION ====== -->
+    <section class="section" id="section-doctors">
+      <div class="section-header">
+        <h2 class="section-title">Doctor Management</h2>
+        <button class="btn btn-teal" id="add-doctor-btn" onclick="openModal('add-doctor-modal')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Doctor
+        </button>
+      </div>
+      <div class="card">
+        <div class="table-wrapper">
+          <table class="data-table" id="doctors-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Specialization</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="doctors-tbody">
+              <tr><td colspan="4" class="empty-row">No doctors registered yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== APPOINTMENTS SECTION ====== -->
+    <section class="section" id="section-appointments">
+      <div class="section-header">
+        <h2 class="section-title">Appointment Management</h2>
+        <button class="btn btn-purple" id="add-appt-btn" onclick="openModal('add-appt-modal')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Book Appointment
+        </button>
+      </div>
+      <div class="card">
+        <div class="table-wrapper">
+          <table class="data-table" id="appointments-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Patient</th>
+                <th>Doctor</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="appointments-tbody">
+              <tr><td colspan="6" class="empty-row">No appointments booked yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ====== MODALS ====== -->
+
+  <!-- Add Patient Modal -->
+  <div class="modal-overlay" id="add-patient-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Add New Patient</h3>
+        <button class="modal-close" onclick="closeModal('add-patient-modal')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label" for="p-name">Patient Name</label>
+          <input type="text" id="p-name" class="form-input" placeholder="e.g. John Doe" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="p-age">Age</label>
+          <input type="number" id="p-age" class="form-input" placeholder="e.g. 35" min="1" max="120" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="p-condition">Medical Condition</label>
+          <input type="text" id="p-condition" class="form-input" placeholder="e.g. Hypertension" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('add-patient-modal')">Cancel</button>
+        <button class="btn btn-primary" onclick="addPatient()">Add Patient</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Doctor Modal -->
+  <div class="modal-overlay" id="add-doctor-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Add New Doctor</h3>
+        <button class="modal-close" onclick="closeModal('add-doctor-modal')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label" for="d-name">Doctor Name</label>
+          <input type="text" id="d-name" class="form-input" placeholder="e.g. Dr. Sarah Khan" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="d-spec">Specialization</label>
+          <input type="text" id="d-spec" class="form-input" placeholder="e.g. Cardiology" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('add-doctor-modal')">Cancel</button>
+        <button class="btn btn-teal" onclick="addDoctor()">Add Doctor</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Book Appointment Modal -->
+  <div class="modal-overlay" id="add-appt-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Book Appointment</h3>
+        <button class="modal-close" onclick="closeModal('add-appt-modal')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label" for="a-patient">Select Patient</label>
+          <select id="a-patient" class="form-input form-select">
+            <option value="">-- Select Patient --</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="a-doctor">Select Doctor</label>
+          <select id="a-doctor" class="form-input form-select">
+            <option value="">-- Select Doctor --</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="a-date">Date</label>
+            <input type="date" id="a-date" class="form-input" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="a-time">Time</label>
+            <input type="time" id="a-time" class="form-input" />
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('add-appt-modal')">Cancel</button>
+        <button class="btn btn-purple" onclick="bookAppointment()">Book Appointment</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- View Patient Detail Modal -->
+  <div class="modal-overlay" id="view-patient-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Patient Details</h3>
+        <button class="modal-close" onclick="closeModal('view-patient-modal')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body" id="view-patient-body"></div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" onclick="closeModal('view-patient-modal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- View Doctor Detail Modal -->
+  <div class="modal-overlay" id="view-doctor-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Doctor Details</h3>
+        <button class="modal-close" onclick="closeModal('view-doctor-modal')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body" id="view-doctor-body"></div>
+      <div class="modal-footer">
+        <button class="btn btn-teal" onclick="closeModal('view-doctor-modal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
